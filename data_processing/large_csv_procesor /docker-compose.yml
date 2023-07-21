@@ -1,0 +1,25 @@
+version: '3'
+services:
+  app:
+    build: .
+    ports:
+      - "5000:5000"
+    depends_on:
+      - redis
+    volumes:
+      - ./uploads:/app/uploads
+      - ./results:/app/results
+
+  redis:
+    image: redis:latest
+    restart: always
+
+  worker:
+    build:
+      context: .
+    volumes:
+      - ./uploads:/app/uploads
+      - ./results:/app/results
+    depends_on:
+      - redis
+    command: celery -A celery_worker:app worker --loglevel=info
