@@ -15,7 +15,10 @@ CONTEXT_MESSAGES_INIT = [
 
 CREATION_MESSAGE = {
     "role": "user",
-    "content": """Create a function that {action} using selenium. the parameter should be the driver. Don't include any explanations in your responses. Dont include imports.""",
+    "content": """Create a function that {action} using selenium.
+    - The parameter should be the driver. 
+    - Don't include any explanations in your responses. Dont include imports.
+    - The return should be an html""",
 }
 
 ERROR_MESSAGE = {

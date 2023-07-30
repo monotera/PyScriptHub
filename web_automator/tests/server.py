@@ -50,4 +50,4 @@ def read_root(data: dict):
     global driver
     print(data)
     response, is_error = run_function_from_string(data["code"], driver)
-    return {"is_error": is_error, "response": response}
+    return {is_error: is_error, "response": response}

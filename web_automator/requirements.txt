@@ -1,8 +1,6 @@
 selenium
 chromedriver-autoinstaller
-kafka-python
 openai
 python-dotenv
 requests
-urllib3
-chardet
+beautifulsoup4

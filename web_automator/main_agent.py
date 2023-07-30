@@ -1,22 +1,22 @@
-from kafka import KafkaProducer
-import time
-from openai_utils import get_code_from_open_ai
 import re
 import pprint
-
-# Kafka server address
-bootstrap_servers = "localhost:9092"
-
-# Topic name
-topic_name = "code_sender"
-
-# Create Kafka producer
-producer = KafkaProducer(bootstrap_servers=bootstrap_servers)
+import requests
+from openai_utils import get_code_from_open_ai
+from html_cleaner import get_cleaned_html
 
 
 def send_message(message):
-    producer.send(topic_name, value=message.encode("utf-8"))
-    producer.flush()
+    api_url = "http://127.0.0.1:8000/"
+    json_payload = {"code": message}
+    response = requests.post(api_url, json=json_payload)
+    # Check the response status code
+    if response.status_code == 200:
+        print("Request successful. Response:")
+        response_data = response.json()
+        print(response_data)
+        return response_data
+    else:
+        print(f"Request failed with status code: {response.status_code}")
 
 
 def main():
@@ -24,7 +24,6 @@ def main():
     while True:
         action = input("Enter a web action or exit to quit: ")
         if action.lower() == "exit":
-            producer.close()
             break
         is_error = input("Is this an error? (y/n): ")
         is_error = is_error.lower() == "y"
@@ -32,8 +31,7 @@ def main():
             action, history_messages, is_error
         )
         pprint.pprint(history_messages)
-        send_message(message)
-        print(f"Message '{message}' sent to Kafka.")
+        response = send_message(message)
 
 
 if __name__ == "__main__":
